@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"linked-page/config"
 	"linked-page/db"
+	"linked-page/model"
+
 	docs "linked-page/docs"
-	"linked-page/types"
+	"linked-page/router"
 	"log"
 	"net/http"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/google/uuid"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -44,7 +45,6 @@ func RequestIDMiddleware() gin.HandlerFunc {
 }
 
 func main() {
-	_ = db.ConnectDB()
 	env := config.Env.ENV
 	port := config.Env.PORT
 	ssl := config.Env.SSL
@@ -57,16 +57,23 @@ func main() {
 	//Start the default gin server
 	r := gin.Default()
 
-	//Custom type validator
-	binding.Validator = new(types.DefaultValidator)
-
 	r.Use(CORSMiddleware())
 	r.Use(RequestIDMiddleware())
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
 
-	// v1 := r.Group("/v1")
-	// routers.UserRoute(v1)
+	api := r.Group("/api")
+	router.PageRoute(api)
+	router.ListRoute(api)
+	db.DB.AutoMigrate(&model.List{})
+	db.DB.AutoMigrate(&model.Page{})
 	// routers.AuthRoute(v1)
+
+	//seed data
+	var pageModel = new(model.PageModel)
+	pageModel.SeedData()
+
+	var listModel = new(model.ListModel)
+	listModel.SeedData()
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "pong")

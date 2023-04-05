@@ -17,7 +17,6 @@ type EnvVarDetails struct {
 	POSTGRES_PORT     string
 	ACCESS_SECRET     string
 	REFRESH_SECRET    string
-	EMAIL             string
 	ENV               string
 	PORT              string
 	SSL               string
@@ -28,6 +27,11 @@ func NewEnvVarDetails() *EnvVarDetails {
 
 	// set default value of env variable
 	envVarDetails := &EnvVarDetails{}
+	envVarDetails.POSTGRES_USER = "postgres"
+	envVarDetails.POSTGRES_PASSWORD = "postgres"
+	envVarDetails.POSTGRES_DB = "postgres"
+	envVarDetails.POSTGRES_HOSTNAME = "localhost"
+	envVarDetails.POSTGRES_PORT = "5432"
 	envVarDetails.ACCESS_SECRET = "1234"
 	envVarDetails.REFRESH_SECRET = "5678"
 	envVarDetails.ENV = "LOCAL"
