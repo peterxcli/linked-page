@@ -14,5 +14,6 @@ func ListRoute(router *gin.RouterGroup) {
 		pageRouter.GET("/:list_id", listHandler.GetListByListId)
 		pageRouter.PATCH("/:list_id", listHandler.SetListByListId)
 		pageRouter.GET("/user/:user_id", listHandler.GetListByUserId)
+		pageRouter.POST("/:list_id", listHandler.InsertList)
 	}
 }

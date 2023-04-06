@@ -18,6 +18,16 @@ type PageHandler struct{}
 
 var pageService = new(service.PageService)
 
+// GetPage godoc
+// @Summary Get a page by ID
+// @Description Get a page by its ID
+// @Tags Page
+// @Param page_id path uint true "Page ID"
+// @Produce json
+// @Success 200 {object} string "error"
+// @Failure 400 {object} string "error"
+// @Failure 404 {object} string "page content"
+// @Router /page/{page_id} [get]
 func (ph *PageHandler) GetPage(c *gin.Context) {
 	pageId, err := strconv.ParseUint(c.Param("page_id"), 10, 64)
 	if err != nil {
@@ -37,6 +47,19 @@ func (ph *PageHandler) GetPage(c *gin.Context) {
 	})
 }
 
+// SetPage godoc
+// @Summary Update a page
+// @Description Update an existing page by its ID
+// @Tags Page
+// @Param page_id path uint true "Page ID"
+// @Param PrevPageId body uint false "Previous page ID"
+// @Param NextPageId body uint false "Next page ID"
+// @Param ArticleIds body []int64 false "Article IDs"
+// @Produce json
+// @Success 200 {object} string "success"
+// @Failure 400 {object} string "error"
+// @Failure 404 {object} string "error"
+// @Router /page/{page_id} [patch]
 func (ph *PageHandler) SetPage(c *gin.Context) {
 	patchPageRequest := dtos.PatchPageRequest{}
 	if err := c.ShouldBindJSON(&patchPageRequest); err != nil {
@@ -61,6 +84,24 @@ func (ph *PageHandler) SetPage(c *gin.Context) {
 	c.JSON(http.StatusOK, "success")
 }
 
+// InsertPage godoc
+// @Summary Insert a new page, if the pageId doesnt specify, then the newPageId would be a random number
+// @Tags Page
+// @Accept json
+// @Produce json
+// @Param insertPageRequest body dtos.InsertPageRequest true "Insert Page Request"
+// @Success 200 {integer} integer "Page ID"
+// @Failure 400 {object} string "error"
+// @Router /page [post]
+// @Description If PrevPageId is provided but NextPageId is not, the new page will be inserted after the page with the specified PrevPageId, forming a linked-list-like structure. Similarly, if NextPageId is provided but PrevPageId is not, the new page will be inserted before the page with the specified NextPageId, forming a linked-list-like structure.
+// @Tags Page
+// @Accept json
+// @Produce json
+// @Param insertPageRequest body dtos.InsertPageRequest true "Insert Page Request"
+// @Success 200 {integer} integer "Page ID"
+// @Failure 400 {object} string "error"
+// @Router /page [post]
+// @Router /page/{page_id} [post]
 func (ph *PageHandler) InsertPage(c *gin.Context) {
 	insertPageRequest := dtos.InsertPageRequest{}
 	if err := c.ShouldBindJSON(&insertPageRequest); err != nil {
@@ -98,6 +139,15 @@ func (ph *PageHandler) InsertPage(c *gin.Context) {
 
 var pageModel = new(model.PageModel)
 
+// DeleteCertainHourBeforeHandler godoc
+// @Summary Delete all pages with updated time before a certain hour
+// @Description Delete all pages with updated time before a certain hour
+// @Tags Page
+// @Param hour query int true "Hour"
+// @Produce json
+// @Success 200 {object} string "rowAffected"
+// @Failure 400 {object} string "error"
+// @Router /page/hours [delete]
 func (ph *PageHandler) DeleteCertainHourBeforeHandler(c *gin.Context) {
 	hourParam := c.Query("hour")
 	hour, err := strconv.Atoi(hourParam)

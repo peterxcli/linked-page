@@ -78,7 +78,7 @@ func main() {
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "pong")
 	})
-	docs.SwaggerInfo.BasePath = "/v1"
+	docs.SwaggerInfo.BasePath = "/api"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	if env == "LOCAL" {
 		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, ginSwagger.DeepLinking(true)))

@@ -10,7 +10,6 @@ type ListService struct{}
 var listModel = new(model.ListModel)
 
 func (ls *ListService) SetListByListId(patchList *dtos.PatchListRequest) (err error) {
-
 	list := model.List{
 		ListId: patchList.ListId,
 		UserId: patchList.UserId,
@@ -21,4 +20,17 @@ func (ls *ListService) SetListByListId(patchList *dtos.PatchListRequest) (err er
 		return err
 	}
 	return nil
+}
+
+func (ls *ListService) InsertList(insertList *dtos.InsertListRequest) (newListId uint, err error) {
+	list := model.List{
+		ListId: insertList.ListId,
+		UserId: insertList.UserId,
+		HeadId: insertList.HeadId,
+	}
+	newListId, err = listModel.CreatePage(&list)
+	if err != nil {
+		return newListId, err
+	}
+	return newListId, err
 }

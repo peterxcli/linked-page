@@ -28,7 +28,6 @@ func (m PageModel) GetPageById(pageId uint) (page *Page, err error) {
 }
 
 func (m PageModel) CreatePage(page *Page) (id uint, err error) {
-	// fmt.Printf("%#v", page)
 	err = db.DB.Create(page).Error
 	if err != nil {
 		return 0, err
@@ -83,7 +82,7 @@ func (m PageModel) DeletePageById(pageId int64) error {
 
 func (m PageModel) SeedData() {
 	// Check if any data already exists in the table
-	// db.DB.Exec("DELETE FROM pages")
+	db.DB.Exec("DELETE FROM pages")
 	var count int64
 	db.DB.Model(&Page{}).Count(&count)
 	if count == 0 {
@@ -180,6 +179,7 @@ func (m PageModel) SeedData() {
 		}
 		// db.DB.Create(&pages)
 		// Insert sample pages into the database
+		return
 		for _, page := range pages {
 			err := db.DB.Create(&page).Error
 			if err != nil {

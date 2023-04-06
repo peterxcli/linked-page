@@ -15,7 +15,468 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/list/user/{user_id}": {
+            "get": {
+                "description": "Get all lists belonging to a user by their ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "List"
+                ],
+                "summary": "Get all lists by user ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "list content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/list/{list_id}": {
+            "get": {
+                "description": "Get a list by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "List"
+                ],
+                "summary": "Get a list by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "List ID",
+                        "name": "list_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "list content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new list and returns the ID of the newly created list.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "List"
+                ],
+                "summary": "Creates a new list",
+                "operationId": "create-list",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "List ID (if empty, it will be generated randomly)",
+                        "name": "list_id",
+                        "in": "path"
+                    },
+                    {
+                        "description": "List object that needs to be added",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.InsertListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "returns the ID of the newly created list",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update an existing list by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "List"
+                ],
+                "summary": "Update a list by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "List ID",
+                        "name": "list_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Patch List Request",
+                        "name": "patchListRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.PatchListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/page": {
+            "post": {
+                "description": "If PrevPageId is provided but NextPageId is not, the new page will be inserted after the page with the specified PrevPageId, forming a linked-list-like structure. Similarly, if NextPageId is provided but PrevPageId is not, the new page will be inserted before the page with the specified NextPageId, forming a linked-list-like structure.",
+                "consumes": [
+                    "application/json",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "Page",
+                    "Page"
+                ],
+                "summary": "Insert a new page, if the pageId doesnt specify, then the newPageId would be a random number",
+                "parameters": [
+                    {
+                        "description": "Insert Page Request",
+                        "name": "insertPageRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.InsertPageRequest"
+                        }
+                    },
+                    {
+                        "description": "Insert Page Request",
+                        "name": "insertPageRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.InsertPageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Page ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/page/hours": {
+            "delete": {
+                "description": "Delete all pages with updated time before a certain hour",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Page"
+                ],
+                "summary": "Delete all pages with updated time before a certain hour",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Hour",
+                        "name": "hour",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "rowAffected",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/page/{page_id}": {
+            "get": {
+                "description": "Get a page by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Page"
+                ],
+                "summary": "Get a page by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page ID",
+                        "name": "page_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "page content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "If PrevPageId is provided but NextPageId is not, the new page will be inserted after the page with the specified PrevPageId, forming a linked-list-like structure. Similarly, if NextPageId is provided but PrevPageId is not, the new page will be inserted before the page with the specified NextPageId, forming a linked-list-like structure.",
+                "consumes": [
+                    "application/json",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "Page",
+                    "Page"
+                ],
+                "summary": "Insert a new page, if the pageId doesnt specify, then the newPageId would be a random number",
+                "parameters": [
+                    {
+                        "description": "Insert Page Request",
+                        "name": "insertPageRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.InsertPageRequest"
+                        }
+                    },
+                    {
+                        "description": "Insert Page Request",
+                        "name": "insertPageRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.InsertPageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Page ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update an existing page by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Page"
+                ],
+                "summary": "Update a page",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page ID",
+                        "name": "page_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Previous page ID",
+                        "name": "PrevPageId",
+                        "in": "body",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Next page ID",
+                        "name": "NextPageId",
+                        "in": "body",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Article IDs",
+                        "name": "ArticleIds",
+                        "in": "body",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dtos.InsertListRequest": {
+            "type": "object",
+            "properties": {
+                "head_id": {
+                    "type": "integer"
+                },
+                "list_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dtos.InsertPageRequest": {
+            "type": "object",
+            "properties": {
+                "article_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "next_page_id": {
+                    "type": "integer"
+                },
+                "page_id": {
+                    "type": "integer"
+                },
+                "prev_page_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dtos.PatchListRequest": {
+            "type": "object",
+            "properties": {
+                "head_id": {
+                    "type": "integer"
+                },
+                "list_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

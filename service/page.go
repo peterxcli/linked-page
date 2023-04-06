@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"linked-page/dtos"
 	"linked-page/model"
 
@@ -78,7 +77,7 @@ func (ps PageService) InsertPage(newPage *dtos.InsertPageRequest) (newPageId uin
 			return newPageId, err
 		}
 		//prev->next_id = page.page_id
-		err = pageModel.UpdateNextPageId(&model.Page{PageId: page.PrevPageId, PrevPageId: page.PageId})
+		err = pageModel.UpdateNextPageId(&model.Page{PageId: page.PrevPageId, NextPageId: page.PageId})
 		if err != nil {
 			return newPageId, err
 		}
@@ -91,7 +90,6 @@ func (ps PageService) InsertPage(newPage *dtos.InsertPageRequest) (newPageId uin
 			NextPageId: newPage.NextPageId,
 		}
 		newPageId, err = pageModel.CreatePage(&page)
-		fmt.Printf("%#v", page)
 		if err != nil {
 			return newPageId, err
 		}

@@ -5,3 +5,9 @@ type PatchListRequest struct {
 	UserId uint `json:"user_id,omitempty"`
 	HeadId uint `json:"head_id,omitempty"`
 }
+
+type InsertListRequest struct {
+	ListId uint `gorm:"primaryKey" json:"list_id,omitempty" `
+	UserId uint `json:"user_id,omitempty"`
+	HeadId uint `json:"head_id,omitempty"`
+}

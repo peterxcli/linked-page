@@ -1,7 +1,6 @@
 package model
 
 import (
-	"encoding/json"
 	"linked-page/db"
 	"time"
 )
@@ -33,18 +32,32 @@ func (m ListModel) GetByListId(listId uint) (list *List, err error) {
 	return list, err
 }
 
-func (m ListModel) UpdateByListId(list *List) error {
-	listJson, _ := json.Marshal(list)
-	var listMap map[string]interface{}
-	_ = json.Unmarshal(listJson, &listMap)
-	return db.DB.Model(&List{}).Where("list_id = ?", list.ListId).Updates(listMap).Error
+func (m ListModel) CreatePage(list *List) (id uint, err error) {
+	err = db.DB.Create(list).Error
+	if err != nil {
+		return 0, err
+	}
+	return list.ListId, nil
 }
 
-func (m ListModel) UpdateByUserId(list *List) error {
-	listJson, _ := json.Marshal(list)
-	var listMap map[string]interface{}
-	_ = json.Unmarshal(listJson, &listMap)
-	return db.DB.Model(&List{}).Where("user_id = ?", list.UserId).Updates(listMap).Error
+func (m ListModel) UpdateByListId(list *List) (err error) {
+	_, err = m.GetByListId(list.ListId)
+	if err != nil {
+		return err
+	}
+	result := db.DB.Model(&List{}).Where("list_id = ?", list.ListId).Updates(list)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func (m ListModel) UpdateByUserId(list *List) (err error) {
+	_, err = m.GetByUserId(list.UserId)
+	if err != nil {
+		return err
+	}
+	return db.DB.Model(&List{}).Where("user_id = ?", list.UserId).Updates(list).Error
 }
 
 func (m ListModel) SeedData() {
@@ -73,6 +86,7 @@ func (m ListModel) SeedData() {
 				HeadId: 13,
 			},
 		}
+		return
 		// Insert sample pages into the database
 		for _, list := range lists {
 			err := db.DB.Create(&list).Error
