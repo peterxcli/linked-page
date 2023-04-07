@@ -9,7 +9,7 @@ RUN go build -o /app/main -v
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 COPY --from=builder /app/main /app/main
-COPY --from=builder /app/public /app/public
+# COPY --from=builder /app/public /app/public
 WORKDIR /app
 ENTRYPOINT /app/main
 LABEL Name=mongogo Version=0.0.1

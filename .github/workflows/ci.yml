@@ -38,7 +38,7 @@ jobs:
       - name: Install Deps
         run: sudo apt update && sudo apt install -y ca-certificates make git && make install
 
-      - name:
+      - name: Go Build
         run: go build -v
 
       - name: Test
