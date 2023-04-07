@@ -3,6 +3,7 @@ package service_test
 import (
 	"linked-page/db"
 	"linked-page/dtos"
+	"linked-page/model"
 	"linked-page/service"
 	"math"
 	"math/rand"
@@ -10,12 +11,19 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 	// _ "github.com/stretchr/testify/assert"
 )
+
+func AutoMigrate(dbInstance *gorm.DB) {
+	dbInstance.AutoMigrate(&model.Page{})
+	dbInstance.AutoMigrate(&model.List{})
+}
 
 func TestInsertPage(t *testing.T) {
 	// Initialize the database
 	db.InitTestDB(db.DB)
+	AutoMigrate(db.DB)
 	// defer db.CloseTestDB(db.DB)
 	db.DB.Exec("DELETE FROM pages")
 
@@ -87,6 +95,7 @@ func TestInsertPage(t *testing.T) {
 func TestUpdatePage(t *testing.T) {
 	// Initialize the database
 	db.InitTestDB(db.DB)
+	AutoMigrate(db.DB)
 	// defer db.CloseTestDB(db.DB)
 	db.DB.Exec("DELETE FROM pages")
 

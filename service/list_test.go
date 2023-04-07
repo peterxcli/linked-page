@@ -13,6 +13,7 @@ import (
 func TestSetListByListId(t *testing.T) {
 	// Initialize the database
 	db.InitTestDB(db.DB)
+	AutoMigrate(db.DB)
 	db.DB.Exec("DELETE FROM lists")
 	// defer db.CloseTestDB(db.DB)
 
