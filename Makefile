@@ -38,6 +38,6 @@ help:
 	@echo "make clean: remove object files and cached files"
 
 install:
-	go install -buildvcs=false
+	go install
 	go install github.com/swaggo/swag/cmd/swag@latest
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
