@@ -20,7 +20,8 @@
 				"eamodio.gitlens",
 				"GitHub.copilot",
 				"golang.go",
-				"ms-vscode.makefile-tools"
+				"ms-vscode.makefile-tools",
+				"zxh404.vscode-proto3"
 			]
 		}
 	}

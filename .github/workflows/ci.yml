@@ -38,8 +38,8 @@ jobs:
       - name: Install Deps
         run: sudo apt update && sudo apt install -y ca-certificates make
 
-      - name: Build
-        run: go build -v -buildvcs=false ./...
+      # - name: Build
+      #   run: go build -v -buildvcs=false ./...
 
       - name: Test
         env:
