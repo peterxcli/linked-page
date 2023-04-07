@@ -86,7 +86,6 @@ func (m ListModel) SeedData() {
 				HeadId: 13,
 			},
 		}
-		return
 		// Insert sample pages into the database
 		for _, list := range lists {
 			err := db.DB.Create(&list).Error

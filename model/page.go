@@ -179,7 +179,6 @@ func (m PageModel) SeedData() {
 		}
 		// db.DB.Create(&pages)
 		// Insert sample pages into the database
-		return
 		for _, page := range pages {
 			err := db.DB.Create(&page).Error
 			if err != nil {
