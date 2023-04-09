@@ -1,6 +1,7 @@
 # dcard backend - linked page
 
 - [repo link](https://github.com/peterxcli/linked-page)
+- [swagger](https://peterxcli.github.io/linked-page/)
 
 
 ## setup
