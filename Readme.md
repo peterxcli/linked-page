@@ -40,4 +40,6 @@ PostgreSQL is a powerful and versatile relational database management system tha
 
 5. Open Source: PostgreSQL is an open source database, meaning that it is freely available and can be modified and customized to fit your specific needs. This can save you money on licensing fees and provide greater flexibility in your development process.
 
+------
+
 - 嗚嗚嗚寫不完了QQ
