@@ -72,12 +72,12 @@ func (m PageModel) DeletePageCertainHourBefore(hour int) (rowsAffected int, err 
 	return int(result.RowsAffected), nil
 }
 
-func (m PageModel) DeletePageById(pageId int64) error {
-	err := db.DB.Delete(&Page{}, pageId).Error
-	if err != nil {
-		return err
+func (m PageModel) DeletePageById(pageId int64) (rowsAffected int, err error) {
+	result := db.DB.Delete(&Page{}, pageId)
+	if result.Error != nil {
+		return rowsAffected, result.Error
 	}
-	return nil
+	return int(result.RowsAffected), nil
 }
 
 func (m PageModel) SeedData() {

@@ -5,23 +5,26 @@ service Page {
     rpc GetPage(GetPageRequest) returns (GetPageResponse);
     rpc SetPage(SetPageRequest) returns (SetPageResponse);
     rpc InsertPage(InsertPageRequest) returns (InsertPageResponse);
-    rpc DeletePageCertainHourBefore(DeletePageCertainHourBeforeRequest) returns (DeletePageCertainHourBeforeResponse);
+    rpc DeletePageCertainHourBefore(DeletePageRequest) returns (DeletePageResponse);
+    rpc DeletePage(DeletePageRequest) returns (DeletePageResponse);
 }
 
 message GetPageRequest {
-    uint32 page_id = 1;
+    uint32 PageId = 1;
 }
 
 message GetPageResponse {
     uint32 PageId = 1;
 	uint32 NextPageId = 2;
-	uint32 PreviousPageId = 3;
+	uint32 PrevPageId = 3;
     repeated uint32 ArticleIds = 4;
 }
 
 message SetPageRequest {
-	uint32 PreviousPageId = 1;
-	repeated uint32 ArticleIds = 2;
+	uint32 PageId = 1;
+    uint32 NextPageId = 2;
+    uint32 PrevPageId = 3;
+    repeated uint32 ArticleIds = 4;
 }
 
 message SetPageResponse {
@@ -31,7 +34,7 @@ message SetPageResponse {
 message InsertPageRequest {
     uint32 PageId = 1;
     uint32 NextPageId = 2;
-    uint32 PreviousPageId = 3;
+    uint32 PrevPageId = 3;
     repeated uint32 ArticleIds = 4;
 }
 
@@ -40,10 +43,11 @@ message InsertPageResponse {
     uint32 NewPageId = 2;
 }
 
-message DeletePageCertainHourBeforeRequest {
-    int32 hour = 1;
+message DeletePageRequest {
+    uint32 PageId = 1;
+    int32 Hour = 2;
 }
 
-message DeletePageCertainHourBeforeResponse {
+message DeletePageResponse {
     uint32 RowAffected = 1;
 }

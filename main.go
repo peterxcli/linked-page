@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"linked-page/config"
 	"linked-page/db"
+	"linked-page/grpcs"
 	"linked-page/model"
+	"linked-page/proto/page"
+	"net"
+	"sync"
 
 	docs "linked-page/docs"
 	"linked-page/router"
@@ -16,6 +20,7 @@ import (
 	"github.com/google/uuid"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"google.golang.org/grpc"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -44,6 +49,18 @@ func RequestIDMiddleware() gin.HandlerFunc {
 	}
 }
 
+func SetupGRPCServer() {
+	grpcServer := grpc.NewServer()
+	pageGRPCService := grpcs.NewPageGRPC()
+	page.RegisterPageServer(grpcServer, pageGRPCService)
+	listener, err := net.Listen("tcp", "localhost:9001")
+	if err != nil {
+		panic(err)
+	}
+
+	grpcServer.Serve(listener)
+}
+
 func main() {
 	env := config.Env.ENV
 	port := config.Env.PORT
@@ -66,20 +83,28 @@ func main() {
 	router.ListRoute(api)
 	db.DB.AutoMigrate(&model.List{})
 	db.DB.AutoMigrate(&model.Page{})
-	// routers.AuthRoute(v1)
 
 	//seed data
-	// var pageModel = new(model.PageModel)
-	// pageModel.SeedData()
+	var pageModel = new(model.PageModel)
+	pageModel.SeedData()
 
-	// var listModel = new(model.ListModel)
-	// listModel.SeedData()
+	var listModel = new(model.ListModel)
+	listModel.SeedData()
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "pong")
 	})
 	docs.SwaggerInfo.BasePath = "/api"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
+	// start grpc server
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		SetupGRPCServer()
+	}()
+
 	if env == "LOCAL" {
 		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, ginSwagger.DeepLinking(true)))
 	}

@@ -25,7 +25,8 @@ type PageClient interface {
 	GetPage(ctx context.Context, in *GetPageRequest, opts ...grpc.CallOption) (*GetPageResponse, error)
 	SetPage(ctx context.Context, in *SetPageRequest, opts ...grpc.CallOption) (*SetPageResponse, error)
 	InsertPage(ctx context.Context, in *InsertPageRequest, opts ...grpc.CallOption) (*InsertPageResponse, error)
-	DeletePageCertainHourBefore(ctx context.Context, in *DeletePageCertainHourBeforeRequest, opts ...grpc.CallOption) (*DeletePageCertainHourBeforeResponse, error)
+	DeletePageCertainHourBefore(ctx context.Context, in *DeletePageRequest, opts ...grpc.CallOption) (*DeletePageResponse, error)
+	DeletePage(ctx context.Context, in *DeletePageRequest, opts ...grpc.CallOption) (*DeletePageResponse, error)
 }
 
 type pageClient struct {
@@ -63,9 +64,18 @@ func (c *pageClient) InsertPage(ctx context.Context, in *InsertPageRequest, opts
 	return out, nil
 }
 
-func (c *pageClient) DeletePageCertainHourBefore(ctx context.Context, in *DeletePageCertainHourBeforeRequest, opts ...grpc.CallOption) (*DeletePageCertainHourBeforeResponse, error) {
-	out := new(DeletePageCertainHourBeforeResponse)
+func (c *pageClient) DeletePageCertainHourBefore(ctx context.Context, in *DeletePageRequest, opts ...grpc.CallOption) (*DeletePageResponse, error) {
+	out := new(DeletePageResponse)
 	err := c.cc.Invoke(ctx, "/Page/DeletePageCertainHourBefore", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pageClient) DeletePage(ctx context.Context, in *DeletePageRequest, opts ...grpc.CallOption) (*DeletePageResponse, error) {
+	out := new(DeletePageResponse)
+	err := c.cc.Invoke(ctx, "/Page/DeletePage", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +89,8 @@ type PageServer interface {
 	GetPage(context.Context, *GetPageRequest) (*GetPageResponse, error)
 	SetPage(context.Context, *SetPageRequest) (*SetPageResponse, error)
 	InsertPage(context.Context, *InsertPageRequest) (*InsertPageResponse, error)
-	DeletePageCertainHourBefore(context.Context, *DeletePageCertainHourBeforeRequest) (*DeletePageCertainHourBeforeResponse, error)
+	DeletePageCertainHourBefore(context.Context, *DeletePageRequest) (*DeletePageResponse, error)
+	DeletePage(context.Context, *DeletePageRequest) (*DeletePageResponse, error)
 	mustEmbedUnimplementedPageServer()
 }
 
@@ -96,8 +107,11 @@ func (UnimplementedPageServer) SetPage(context.Context, *SetPageRequest) (*SetPa
 func (UnimplementedPageServer) InsertPage(context.Context, *InsertPageRequest) (*InsertPageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InsertPage not implemented")
 }
-func (UnimplementedPageServer) DeletePageCertainHourBefore(context.Context, *DeletePageCertainHourBeforeRequest) (*DeletePageCertainHourBeforeResponse, error) {
+func (UnimplementedPageServer) DeletePageCertainHourBefore(context.Context, *DeletePageRequest) (*DeletePageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePageCertainHourBefore not implemented")
+}
+func (UnimplementedPageServer) DeletePage(context.Context, *DeletePageRequest) (*DeletePageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePage not implemented")
 }
 func (UnimplementedPageServer) mustEmbedUnimplementedPageServer() {}
 
@@ -167,7 +181,7 @@ func _Page_InsertPage_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _Page_DeletePageCertainHourBefore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeletePageCertainHourBeforeRequest)
+	in := new(DeletePageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -179,7 +193,25 @@ func _Page_DeletePageCertainHourBefore_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/Page/DeletePageCertainHourBefore",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PageServer).DeletePageCertainHourBefore(ctx, req.(*DeletePageCertainHourBeforeRequest))
+		return srv.(PageServer).DeletePageCertainHourBefore(ctx, req.(*DeletePageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Page_DeletePage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PageServer).DeletePage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Page/DeletePage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PageServer).DeletePage(ctx, req.(*DeletePageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -206,6 +238,10 @@ var Page_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeletePageCertainHourBefore",
 			Handler:    _Page_DeletePageCertainHourBefore_Handler,
+		},
+		{
+			MethodName: "DeletePage",
+			Handler:    _Page_DeletePage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
