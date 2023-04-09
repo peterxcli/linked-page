@@ -85,11 +85,11 @@ func main() {
 	db.DB.AutoMigrate(&model.Page{})
 
 	//seed data
-	var pageModel = new(model.PageModel)
-	pageModel.SeedData()
+	// var pageModel = new(model.PageModel)
+	// pageModel.SeedData()
 
-	var listModel = new(model.ListModel)
-	listModel.SeedData()
+	// var listModel = new(model.ListModel)
+	// listModel.SeedData()
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "pong")

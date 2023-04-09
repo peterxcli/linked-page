@@ -78,6 +78,35 @@ jobs:
           name: docker.tar
           path: docker.tar
 
+  swagger-ui:
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.20.1
+
+      - name: Install Deps
+        run: sudo apt update && sudo apt install -y ca-certificates make git && make install
+
+      - name: Generate Swagger Json File
+        run: make swag
+
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui
+          spec-file: docs/swagger.json
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: swagger-ui
+
   # push:
   #   if: ${{ github.ref == 'refs/heads/release' }}
   #   needs : [build]
