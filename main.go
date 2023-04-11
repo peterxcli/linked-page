@@ -6,6 +6,7 @@ import (
 	"linked-page/db"
 	"linked-page/grpcs"
 	"linked-page/model"
+	"linked-page/proto/list"
 	"linked-page/proto/page"
 	"net"
 	"sync"
@@ -52,8 +53,10 @@ func RequestIDMiddleware() gin.HandlerFunc {
 func SetupGRPCServer() {
 	grpcServer := grpc.NewServer()
 	pageGRPCService := grpcs.NewPageGRPC()
+	listGRPCService := grpcs.NewListGRPC()
 	page.RegisterPageServer(grpcServer, pageGRPCService)
-	listener, err := net.Listen("tcp", "localhost:9001")
+	list.RegisterListServer(grpcServer, listGRPCService)
+	listener, err := net.Listen("tcp", "0.0.0.0:9001")
 	if err != nil {
 		panic(err)
 	}

@@ -7,6 +7,12 @@ import (
 	"github.com/lib/pq"
 )
 
+type PageServiceInterface interface {
+	GetPage(pageId uint) (page *model.Page, err error)
+	SetPage(patchPage *dtos.PatchPageRequest) (err error)
+	InsertPage(newPage *dtos.InsertPageRequest) (newPageId uint, err error)
+}
+
 type PageService struct{}
 
 var pageModel = new(model.PageModel)

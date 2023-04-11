@@ -41,3 +41,4 @@ install:
 	go install
 	go install github.com/swaggo/swag/cmd/swag@latest
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	go install github.com/golang/mock/mockgen@v1.6.0

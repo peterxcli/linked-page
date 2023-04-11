@@ -27,6 +27,107 @@ make
 ```
 > link to http://localhost:9000/swagger/index.html to view or interact with the openAPI docs
 
+## service endpoints
+### RESTful api: port 9000
+> https://peterxcli.github.io/linked-page/
+
+### gRPC 
+#### list proto : 
+
+```
+syntax = "proto3";
+option go_package = "/protos/list";
+service List {
+    rpc GetList(GetListRequest) returns (GetListResponse);
+    rpc PatchList(PatchListRequest) returns (SetHeadResponse);
+    rpc InsertList(InsertListRequest) returns (SetHeadResponse);
+}
+
+message GetListRequest {
+    uint32 ListId = 1;
+    uint32 UserId = 2;
+}
+
+message GetListResponse {
+    uint32 ListId = 1;
+    uint32 UserId = 2;
+    uint32 HeadId = 3;
+}
+
+message PatchListRequest {
+	uint32 ListId = 1;
+	uint32 UserId = 2;
+	uint32 HeadId = 3;
+}
+
+message InsertListRequest {
+	uint32 ListId = 1;
+	uint32 UserId = 2;
+	uint32 HeadId = 3;
+}
+
+message SetHeadResponse {
+    bool IsSuccess = 1;
+}
+```
+
+#### page proto : 
+```
+syntax = "proto3";
+option go_package = "/proto/page";
+
+service Page {
+    rpc GetPage(GetPageRequest) returns (GetPageResponse);
+    rpc SetPage(SetPageRequest) returns (SetPageResponse);
+    rpc InsertPage(InsertPageRequest) returns (InsertPageResponse);
+    rpc DeletePageCertainHourBefore(DeletePageRequest) returns (DeletePageResponse);
+    rpc DeletePage(DeletePageRequest) returns (DeletePageResponse);
+}
+
+message GetPageRequest {
+    uint32 PageId = 1;
+}
+
+message GetPageResponse {
+    uint32 PageId = 1;
+	uint32 NextPageId = 2;
+	uint32 PrevPageId = 3;
+    repeated uint32 ArticleIds = 4;
+}
+
+message SetPageRequest {
+	uint32 PageId = 1;
+    uint32 NextPageId = 2;
+    uint32 PrevPageId = 3;
+    repeated uint32 ArticleIds = 4;
+}
+
+message SetPageResponse {
+    bool IsSuccess = 1;
+}
+
+message InsertPageRequest {
+    uint32 PageId = 1;
+    uint32 NextPageId = 2;
+    uint32 PrevPageId = 3;
+    repeated uint32 ArticleIds = 4;
+}
+
+message InsertPageResponse {
+    bool IsSuccess = 1;
+    uint32 NewPageId = 2;
+}
+
+message DeletePageRequest {
+    uint32 PageId = 1;
+    int32 Hour = 2;
+}
+
+message DeletePageResponse {
+    uint32 RowAffected = 1;
+}
+```
+
 ## Why use PostgresSQL?
 PostgreSQL is a powerful and versatile relational database management system that is open source and free to use. Here are some of the reasons why you might choose to use PostgreSQL:
 

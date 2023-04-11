@@ -5,6 +5,11 @@ import (
 	"linked-page/model"
 )
 
+type ListServiceInterface interface {
+	SetListByListId(patchList *dtos.PatchListRequest) (err error)
+	InsertList(insertList *dtos.InsertListRequest) (newListId uint, err error)
+}
+
 type ListService struct{}
 
 var listModel = new(model.ListModel)
