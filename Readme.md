@@ -28,11 +28,11 @@ make
 > link to http://localhost:9000/swagger/index.html to view or interact with the openAPI docs
 
 ## service endpoints
-### RESTful api: port 9000
+### RESTful api : port 9000
 > https://peterxcli.github.io/linked-page/
 
-### gRPC 
-#### list proto : 
+### gRPC :
+#### list proto : port 9001
 
 ```
 syntax = "proto3";
