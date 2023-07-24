@@ -144,3 +144,10 @@ PostgreSQL is a powerful and versatile relational database management system tha
 ------
 
 - 嗚嗚嗚寫不完了QQ
+
+### defect
+
+- 整體寫得不錯，特別是採用 swagger & gRPC 這一點。
+- 資料庫的選用建議多涉列一些不同的類型，比較之間的差別和適用情況，像是 Scalability 會好奇是和什麼 DB 做為對象比較
+- 我們期待看到在刪除上有一些進階的處理，怎麼安排儲存方式可以大批刪除又不影響 DB 的效能
+- 有寫測試這點很不錯，但團隊建議做更完整的測試，包含較多情境或者錯誤的測試等等
